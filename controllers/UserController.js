@@ -55,25 +55,34 @@ class UserController {
       if (file) {
         fileReader.readAsDataURL(file);
       } else {
-        resolve('dist/img/boxed-bg.jpg')
+        resolve("dist/img/boxed-bg.jpg");
       }
     });
   }
 
   getValues() {
     let user = {};
+    let isValid = true;
 
     [...this.formEl.elements].forEach((field) => {
+      if (
+        ["name", "email", "password"].indexOf(field.name) > -1 &&
+        !field.value
+      ) {
+        field.parentElement.classList.add("has-error");
+        isValid = false;
+      }
+
       if (field.name === "gender") {
         if (field.checked) user[field.name] = field.value;
-      } else if(field.name === "admin") {
-        user[field.name] = field.checked
+      } else if (field.name === "admin") {
+        user[field.name] = field.checked;
       } else {
         user[field.name] = field.value;
       }
     });
 
-    return new User(
+    isValid ? new User(
       user.name,
       user.gender,
       user.country,
@@ -82,16 +91,16 @@ class UserController {
       user.photo,
       user.email,
       user.password
-    );
+    ) : false;
   }
 
   addUser(dataUser) {
-
-    let tr = document.createElement('tr');
-
+    let tr = document.createElement("tr");
 
     tr.innerHTML = `
-				<td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
+				<td><img src="${
+          dataUser.photo
+        }" alt="User Image" class="img-circle img-sm"></td>
 				<td>${dataUser.name}</td>
 				<td>${dataUser.email}</td>
 				<td>${dataUser.admin ? "Sim" : "Não"}</td>
@@ -102,6 +111,6 @@ class UserController {
 				</td>
 	`;
 
-  this.tableEl.appendChild(tr)
+    this.tableEl.appendChild(tr);
   }
 }
