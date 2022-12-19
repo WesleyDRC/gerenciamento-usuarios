@@ -14,7 +14,6 @@ class User {
 	get registrationTime () {
 		return this._registrationTime
 	}
-
 	get name() {
 		return this._name
 	}
@@ -26,6 +25,9 @@ class User {
 	}
 	get birth() {
 		return this._birth
+	}
+	get admin() {
+		return this._admin
 	}
 	get photo() {
 		return this._photo

@@ -16,6 +16,8 @@ class UserController {
 
       let values = this.getValues();
 
+      if(!values) return false;
+
       this.getPhoto().then(
         (content) => {
           values.photo = content;
@@ -82,7 +84,9 @@ class UserController {
       }
     });
 
-    isValid ? new User(
+    if(!isValid) return false
+
+    return new User(
       user.name,
       user.gender,
       user.country,
@@ -91,11 +95,13 @@ class UserController {
       user.photo,
       user.email,
       user.password
-    ) : false;
+    )
   }
 
   addUser(dataUser) {
     let tr = document.createElement("tr");
+
+    tr.dataset.user = JSON.stringify(dataUser);
 
     tr.innerHTML = `
 				<td><img src="${
@@ -112,5 +118,24 @@ class UserController {
 	`;
 
     this.tableEl.appendChild(tr);
+    this.updateQuantity();
+  }
+
+  updateQuantity() {
+
+    let amountUsers = 0;
+    let amountAdmin = 0;
+
+    [...this.tableEl.children].forEach((item) => {
+
+      amountUsers++
+
+      let user = JSON.parse(item.dataset.user)
+      if(user._admin) amountAdmin++
+
+    })
+
+    document.querySelector("#amountAdmin").innerHTML = amountAdmin
+    document.querySelector("#amountUsers").innerHTML = amountUsers
   }
 }
