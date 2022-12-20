@@ -42,9 +42,11 @@ class UserController {
 
           let user = new User();
 
-          user.loadFromJSON(result)
+          user.loadFromJSON(result);
 
-          this.getTr(user, tr)
+          user.save();
+
+          this.getTr(user, tr);
 
           this.updateQuantity();
 
@@ -53,7 +55,6 @@ class UserController {
           btn.disabled = false;
 
           this.showPanelCreate();
-
         },
         (e) => {
           console.error(e);
@@ -77,7 +78,7 @@ class UserController {
         (content) => {
           values.photo = content;
 
-          this.insert(values);
+          values.save();
 
           this.addUser(values);
 
@@ -178,27 +179,16 @@ class UserController {
     });
   }
 
-  insert(data) {
-    let users = this.getUsersStorage();
-
-    users.push(data);
-
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-
   addUser(dataUser) {
-
-    let tr = this.getTr(dataUser)
+    let tr = this.getTr(dataUser);
 
     this.tableEl.appendChild(tr);
 
     this.updateQuantity();
-
   }
 
   getTr(dataUser, tr = null) {
-
-    if(tr === null) tr = document.createElement("tr");
+    if (tr === null) tr = document.createElement("tr");
 
     tr.dataset.user = JSON.stringify(dataUser);
 
@@ -217,7 +207,7 @@ class UserController {
     `;
 
     this.addEventsTr(tr);
-    return tr
+    return tr;
   }
 
   addEventsTr(tr) {
